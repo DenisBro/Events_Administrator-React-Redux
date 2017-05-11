@@ -31,7 +31,7 @@
   cursor: pointer;
 }
 
-.events{
+.event-label{
   border: 1px solid #ccc;
   padding: 10px;
   margin: 10px 0px;
@@ -52,14 +52,14 @@
   text-align: center;
 }
 
-.changer{
+.unit-config{
   border: 1px solid #ccc;
   margin: 10px 0px;
   padding: 10px;
   width: 300px;
 }
 
-.changer input{
+.unit-config input{
   display: block;
   margin: 10px 0px;
   width: 200px;
@@ -78,7 +78,7 @@
   transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-.changer button{
+.unit-config button{
   height: 34px;
   width: 150px;
   border-radius: 4px;
