@@ -37,9 +37,7 @@
   margin: 10px 0px;
   width: 300px;
 }
-.events-manager{
-  float: left;
-}
+
 .events-manager table{
   width: 500px;
   border: 1px solid #ccc;

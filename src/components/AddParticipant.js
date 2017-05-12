@@ -9,29 +9,34 @@ class AddParticipant extends Component{
 
   addParticipant(e){
     e.preventDefault();
-  //  console.log(e.target.name.value.trim());
-    const name   = e.target.name.value.trim();
-    const amount = e.target.amount.value.trim();
-    const guests = e.target.guests.value.trim();
     const eventId = this.props.eventId;
     const participant = {
                     id    : eventId,
-                    name  : name,
-                    amount: amount,
-                    guests: guests
+                    name  : e.target.name.value.trim(),
+                    amount: e.target.amount.value.trim(),
+                    guests: e.target.guests.value.trim()
                   }
-
-    //console.log(park);
-    //const newState = this.
+    e.target.name.value='';
+    e.target.amount.value='';
+    e.target.guests.value='';
     this.props.onAddParticipant(participant);
   }
   render(){
     return(
       <div className="add-participant unit-config">
         <form onSubmit={this.addParticipant}>
-          <input type="text" name="name" placeholder="Name"/>
-          <input type="text" name="amount" placeholder="Amount"/>
-          <input type="number" name="guests" placeholder="Guests"/>
+          <input type="text"
+                 name="name"
+                 placeholder="Name"
+                 maxLength="50"/>
+          <input type="number"
+                 name="amount"
+                 placeholder="Amount"
+                 maxLength="6"/>
+          <input type="number"
+                 name="guests"
+                 placeholder="Guests"
+                 maxLength="6"/>
           <button>Add participant</button>
         </form>
       </div>

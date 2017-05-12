@@ -2,10 +2,26 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import AddParticipant from './AddParticipant';
-
+import Participants from './Participants';
+import ConfigParticipant from './ConfigParticipant';
 
 class Events extends Component{
+  constructor(props){
+    super(props);
+    this.state={
+      unitId : ''
+    }
+    this.changeUnit = this.changeUnit.bind(this);
+  }
+
+  changeUnit(ind){
+    this.setState({
+      unitId : ind
+    });
+  }
+
   render(){
+  //  console.log(this.state.participantId)
     return(
       <div>
         {this.props.stEvents.map((event,index)=>{
@@ -28,23 +44,9 @@ class Events extends Component{
                         <th>Delete</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Vasia</td>
-                        <td>120</td>
-                        <td>10</td>
-                        <td><button>Change</button></td>
-                        <td><button>Delete</button></td>
-                      </tr>
-                    </tbody>
+                    <Participants changeUnit={this.changeUnit} eventId={index}/>
                   </table>
-                  <div className="unit-config">
-                    <input type="text" placeholder="Name"/>
-                    <input type="text" placeholder="Amount"/>
-                    <input type="number" placeholder="Guests"/>
-                    <button>Change</button>
-                  </div>
+                  <ConfigParticipant eventId={index} unitId={this.state.unitId}/>
                   <AddParticipant eventId={index}/>
                 </div>
               </div>
