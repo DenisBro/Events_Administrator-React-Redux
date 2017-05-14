@@ -1,17 +1,12 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
 
-class ConfigParticipant extends Component{
-  constructor(props){
-    super(props);
-    this.unitConfig = this.unitConfig.bind(this);
-  }
+export default ({unitConfig, eventId, changeId}) => {
 
-  unitConfig(e){
+  const sendConfig = (e)=>{
     e.preventDefault();
-    let unitId = this.props.unitId;
     let unitObj = {
-                  id    : this.props.eventId,
+                  id    : changeId,
+                  evnID : eventId,
                   name  : e.target.name.value.trim(),
                   amount: e.target.amount.value.trim(),
                   guests: e.target.guests.value.trim()
@@ -21,20 +16,13 @@ class ConfigParticipant extends Component{
     e.target.amount.value = '';
     e.target.guests.value = '';
 
-    let newPartStore = this.props.stParticipants.concat();
-      newPartStore.forEach((unit,index)=>{
-        if(index === unitId)
-          newPartStore.splice(index,1, unitObj);
-      });
-
-    this.props.onUnitConfig(newPartStore);
+    unitConfig(unitObj)
   }
 
-  render(){
 
     return(
       <div className="unit-config">
-        <form onSubmit={this.unitConfig}>
+        <form onSubmit={sendConfig}>
           <input type="text"
                  name="name"
                  placeholder="Name"
@@ -51,16 +39,5 @@ class ConfigParticipant extends Component{
         </form>
       </div>
     )
-  }
-}
 
-export default connect(
-  state=>({
-    stParticipants: state.participants
-  }),
-  dispatch=>({
-    onUnitConfig: unit=>{
-      dispatch({type: "UNIT_CONFIG", payload: unit})
-    }
-  })
-)(ConfigParticipant);
+}

@@ -1,26 +1,24 @@
-const initialEvent =[
-                  {
-                    name  : "Night Party",
-                    fee   : 50,
-                    people: 100,
-                  },
-                  {
-                    name  : "Day Party",
-                    fee   : 243,
-                    people: 123,
-                  }
+const initialEvent =[{
+                              id:0,
+                              name  : "Night Party",
+                              fee   : 50,
+                              people: 100,
+                      }
 
-]
+                      ]
 
 export default function events(state=initialEvent, action){
 
   if(action.type === 'ADD_EVENT'){
+  //  return Object.assign({}, state, {event:action.events})
     return [
       ...state,
-      action.payload
+      action.events
     ];
-  }else if(action.type === 'DELETE_EVENT'){
-    return action.payload;
+  }
+  if(action.type === 'DELETE_EVENT'){
+    const newEventStore = state.filter((unit)=>unit.id !== action.events);
+    return newEventStore;
   }
 
   return state;
