@@ -1,18 +1,20 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import AddParticipant from './AddParticipant';
-
-import ConfigParticipant from './ConfigParticipant';
-import EventHead from './EventHead';
-import ShowParticipants from './ShowParticipants';
+import AddParticipant from './dumb/AddParticipant';
+import ConfigParticipant from './dumb/ConfigParticipant';
+import EventHead from './dumb/EventHead';
+import ShowParticipants from './dumb/ShowParticipants';
 
 class Events extends Component{
   constructor(props){
     super(props);
     this.state={
                 count      : 1,
-                changeId   : 0
+                changeId   : 0,
+                confOpened : true,
+                eventOpened: false,
+                eventOpendId: 0
                 }
 
     this.unitConfig = this.unitConfig.bind(this);
@@ -20,34 +22,86 @@ class Events extends Component{
     this.addPartId = this.addPartId.bind(this);
     this.deleteParticipant = this.deleteParticipant.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
+    this.toggleEventState = this.toggleEventState.bind(this);
+    this.toggleConfState = this.toggleConfState.bind(this);
+  }
+
+  totalFactory(type, data){
+    if(data.guests !== ""){
+      let newPartStore = this.props.stParticipants.concat();
+      let allGusets = 0;
+
+      newPartStore.forEach( unit =>{
+        if(type === "addPart" && Number(unit.evnID) === data.evnID){
+          allGusets += Number(unit.guests);
+        }
+        if(type === "conPart" && data.guests !== "" && Number(unit.evnID) === data.evnID && Number(unit.id) !== Number(data.id)){
+          console.log(typeof data.guests);
+          allGusets += Number(unit.guests);
+        }
+        if(type === "delPart" && Number(unit.evnID) === data.evnID && Number(unit.id) !== data.id){
+          allGusets += Number(unit.guests);
+        }
+      });
+
+      if(type !== "delPart") allGusets += Number(data.guests);
+      this.props.onChangeEvent(allGusets, data.evnID);
+    }
   }
 
   addParticipant(data){
+    this.totalFactory("addPart", data);
+
+    this.calculDebt(data);
+
     this.props.onAddParticipant(data);
+
     this.setState({
             count: this.state.count + 1
         });
   }
 
-  addPartId(id){
-    this.setState({
-            changeId: id
-        });
-
+  calculDebt(data){
+    const newEventStore = this.props.stEvents.concat();
+    const event = newEventStore.filter((event)=>event.id===data.evnID);
+    let debt = Number(event[0].fee) * data.guests - data.amount;
+    //return object with property debt
+    data.debt = debt;
   }
 
-  unitConfig(unit){
-  let newPartStore = this.props.stParticipants.concat();
-      newPartStore.forEach((part,index)=>{
-        if(part.id === Number(unit.id)){
-          return newPartStore.splice(index, 1, unit);
+  unitConfig(part){
+    this.totalFactory("conPart", part);
+
+    let newPartStore = this.props.stParticipants.concat();
+      newPartStore.forEach((unit,index)=>{
+        if(unit.id === Number(part.id)){
+
+          if(!part.name)  part.name = unit.name;
+          if(!part.amount)  part.amount = unit.amount;
+          if(!part.guests)  part.guests = unit.guests;
+
+          this.calculDebt(part);
+
+          return newPartStore.splice(index, 1, part);
           }
       });
       this.props.onUnitConfig(newPartStore);
+
+      this.setState({
+              confOpened: !this.state.confOpened
+          });
   }
 
-  deleteParticipant(id){
-    this.props.onDeleteParticipant(id);
+  addPartId(id){
+    this.setState({
+            changeId: id,
+            confOpened: !this.state.confOpened
+        });
+  }
+
+  deleteParticipant(idPart, evnId){
+    this.totalFactory("delPart", {id: idPart, evnID: evnId});
+    this.props.onDeleteParticipant(idPart);
 
   }
 
@@ -56,25 +110,68 @@ class Events extends Component{
     this.props.onDeleteEventParticipants(id);
   }
 
+  toggleEventState(id){
+    this.setState({
+          confOpened: false,
+          eventOpened: !this.state.eventOpened,
+          eventOpendId: id
+        });
+  }
+
+  toggleConfState(){
+    this.setState({
+          confOpened: !this.state.eventOpened
+        });
+  }
+
   render(){
     return(
-      <div>
+      <div className="events">
           {this.props.stEvents.map((evn)=>{
-         return <div id={evn.id} className="event-wrap" key={evn.id}>
-                  <EventHead currentEvent={evn}
-                             deleteEvent={this.deleteEvent}/>
-                  <div className="events-manager">
-                    <ShowParticipants addPartId={this.addPartId}
+            let config;
+            let manager;
+            let spotsLeft = Number(evn.people) - Number(evn.totalGuest);
+            if(this.state.confOpened){
+              config =  <ConfigParticipant
+                            unitConfig={this.unitConfig}
+                            eventId={evn.id}
+                            changeId={this.state.changeId}
+                            toggleConfState={this.toggleConfState}/>
+                      }
+            if(this.state.eventOpened && this.state.eventOpendId === evn.id){
+                manager = <div>
+                            <div className="events-manager-wrap"></div>
+                            <div className="events-manager">
+                              <div className="event-manager-header">
+                                <div>Event name: <span>{evn.name}</span></div>
+                                <div>Participation fee: <span>{evn.fee}</span></div>
+                                <div>Max participants: <span>{evn.people}</span></div>
+
+                              </div>
+                              <div className="events-manager-close" onClick={()=>this.toggleEventState(evn.id)}><span>☓</span></div>
+                              <div className="event-participants">
+                                <ShowParticipants
+                                      addPartId={this.addPartId}
                                       eventId={evn.id}
-                                      deletePart={this.deleteParticipant}/>
-                    <ConfigParticipant unitConfig={this.unitConfig}
-                                       eventId={evn.id}
-                                       changeId={this.state.changeId}/>
-                    <AddParticipant addParticipant={this.addParticipant}
-                                    eventId={evn.id}
-                                    countId={this.state.count}/>
-                  </div>
-                </div>
+                                      deletePart={this.deleteParticipant}
+                                      stParticipants={this.props.stParticipants}/>
+                                {config}
+                                <AddParticipant
+                                      addParticipant={this.addParticipant}
+                                      eventId={evn.id}
+                                      countId={this.state.count}
+                                      spotsLeft={spotsLeft}/>
+                              </div>
+                            </div>
+                          </div>
+                      }
+
+                  return (<div id={evn.id} className="event-wrap" key={evn.id}>
+                            <EventHead currentEvent={evn}
+                                       deleteEvent={this.deleteEvent}
+                                       toggleEventState={this.toggleEventState}/>
+                            {manager}
+                          </div>);
           })}
       </div>
     );
@@ -101,6 +198,9 @@ export default connect(
     },
     onDeleteEventParticipants: (id)=>{
       dispatch({type: 'DELETE_EVENT_PARTICIPANTS', eventId: id});
+    },
+    onChangeEvent: (totalGuests, id)=>{
+      dispatch({type: 'CHANGE_EVENT', guests: totalGuests, eventId: id});
     }
   })
 )(Events);

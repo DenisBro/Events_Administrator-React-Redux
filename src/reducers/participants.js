@@ -1,26 +1,5 @@
-const participant = [{
-                id    : 0,
-                evnID : 1,
-                name  : "Georgy",
-                amount: 222,
-                guests: 333
-              },
-              {
-                id    : 0,
-                evnID : 1,
-                name  : "Maria",
-                amount:333,
-                guests: 444
-              },
-                {
-                  id    : 1,
-                  evnID : 0,
-                  name  : "Jana",
-                  amount: 555,
-                  guests: 663
-                },
-            ]
-export default function participants(state=participant, action){
+
+export default function participants(state=[], action){
 
   if(action.type === 'ADD_PARTICIPANT'){
     return [

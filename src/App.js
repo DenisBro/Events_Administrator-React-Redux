@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 
-import AddEvent from './components/AddEvent';
+import AddEvent from './components/dumb/AddEvent';
 import Events from './components/Events';
 
 import './App.css';
@@ -15,12 +15,6 @@ class App extends Component {
     this.addEvent = this.addEvent.bind(this);
   }
 
-  // componentDidMount(){
-  //   let storeJson = JSON.stringify(this.props.stEvents);
-  //   localStorage.setItem('events', storeJson);
-  // //  console.log(storeJson);
-  // }
-
   addEvent(data){
     this.props.onAddEvent(data,this.state.count);
     this.setState({
@@ -28,16 +22,18 @@ class App extends Component {
         });
   }
 
-
   render() {
     let events;
     if(Object.keys(this.props.stEvents).length !== 0){
-       events =  <Events stEvents={this.props.stEvents}/>;
-    }
+       events =  <Events />;
+    }else events = <div className="no-events">No Events</div>
     return (
       <div className="wrap">
-        <AddEvent updateEvent={this.addEvent}/>
-        {events}
+        <fieldset>
+          <legend>Events</legend>
+          {events}
+          </fieldset>
+        <AddEvent addEvent={this.addEvent}/>
       </div>
     );
   }
@@ -50,10 +46,11 @@ export default connect(
   dispatch=>({
     onAddEvent: (evnt,num)=>{
     const event = {
-                    id: num,
-                    name  : evnt.name,
-                    fee   : evnt.fee,
-                    people: evnt.people
+                    id       : num,
+                    name     : evnt.name,
+                    fee      : evnt.fee,
+                    people   : evnt.people,
+                    totalGuest: evnt.totalGuest
                   }
       dispatch({type:'ADD_EVENT', events: event});
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({updateEvent}) => {
+export default ({addEvent}) => {
 
   const sendEvent = (e)=>{
     e.preventDefault();
@@ -8,14 +8,15 @@ export default ({updateEvent}) => {
     if(name === "")
       return alert('Enter the name of Event!');
     const event  = {
-                    name  : name,
-                    fee   : e.target.fee.value.trim(),
-                    people: e.target.people.value.trim(),
+                    name      : name,
+                    fee       : e.target.fee.value.trim(),
+                    people    : e.target.people.value.trim(),
+                    totalGuest: 0
                   }
     e.target.name.value   = '';
     e.target.fee.value    = '';
     e.target.people.value = '';
-    updateEvent(event);
+    addEvent(event);
   }
   return(
     <div className="create-events">
@@ -27,7 +28,7 @@ export default ({updateEvent}) => {
                required/>
              <input type="number"
                name="fee"
-               placeholder="Partisipation fee"
+               placeholder="Participation fee"
                required
                maxLength="6"/>
         <input type="number"

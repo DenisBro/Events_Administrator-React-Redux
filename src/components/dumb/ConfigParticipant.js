@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({unitConfig, eventId, changeId}) => {
+export default ({unitConfig, eventId, changeId, toggleConfState}) => {
 
   const sendConfig = (e)=>{
     e.preventDefault();
@@ -9,7 +9,7 @@ export default ({unitConfig, eventId, changeId}) => {
                   evnID : eventId,
                   name  : e.target.name.value.trim(),
                   amount: e.target.amount.value.trim(),
-                  guests: e.target.guests.value.trim()
+                  guests: e.target.guests.value.trim(),
                 }
 
     e.target.name.value   = '';
@@ -19,9 +19,8 @@ export default ({unitConfig, eventId, changeId}) => {
     unitConfig(unitObj)
   }
 
-
     return(
-      <div className="unit-config">
+      <div className="unit-config config">
         <form onSubmit={sendConfig}>
           <input type="text"
                  name="name"
@@ -36,8 +35,8 @@ export default ({unitConfig, eventId, changeId}) => {
                  placeholder="Guests"
                  maxLength="6"/>
           <button>Change</button>
+          <div className="close" onClick={()=>toggleConfState()}><span>☓</span></div>
         </form>
       </div>
     )
-
 }
