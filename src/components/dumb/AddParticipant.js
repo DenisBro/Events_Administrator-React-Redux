@@ -20,7 +20,8 @@ export default ({ addParticipant, eventId, countId, spotsLeft}) => {
 
     addParticipant(participant);
   }
-
+  let red = false;
+  if(Math.sign(spotsLeft) === -1) red = true;
     return(
       <div>
         <div className="add-participant unit-config">
@@ -40,7 +41,7 @@ export default ({ addParticipant, eventId, countId, spotsLeft}) => {
             <button>Add participant</button>
           </form>
         </div>
-        <div className="remained"><span>Spots remained: <span>{Number(spotsLeft)}</span></span></div>
+        <div className="remained"><span>Spots remained: <span className={red ? "red" : "green"}>{Number(spotsLeft)}</span></span></div>
       </div>
     )
 

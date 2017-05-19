@@ -50,12 +50,16 @@ button:hover{
 }
 
 .event-label{
-  border: 1px solid #ccc;
   padding: 10px;
   margin: 10px 0px;
   width: 300px;
   cursor: pointer;
   text-align: center;
+  box-shadow: 1px 1px 9px 0px #ccc;
+  border-radius: 4px;
+}
+.event-label:hover{
+  box-shadow: 1px 1px 9px 0px rgba(0, 150, 136, 0.27);;
 }
 .event-label span{
   color: #009688;
@@ -111,6 +115,7 @@ button:hover{
   height: 100%;
   box-sizing: border-box;
   padding: 15px;
+  overflow-y: auto;
 }
 .events-manager-close{
   position: absolute;
@@ -173,12 +178,14 @@ button:hover{
   padding: 6px;
   text-align: center;
 }
+.events-manager table th{
+  color: #009688;
+}
 .config{
   position: fixed;
   background-color: #fff;
 }
 .unit-config{
-  border: 1px solid #ccc;
   padding: 10px;
   width: 300px;
   height: 176px;
@@ -195,7 +202,7 @@ button:hover{
   border-radius: 4px;
   background-color: #009688;
   color: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #009688;
   margin-right: 10px;
   cursor: pointer;
   transition: all ease-in-out 0.2s;
@@ -227,7 +234,6 @@ button:hover{
   color: #009688;
 }
 .remained{
-  border: 1px solid #ccc;
   padding: 10px;
   width: 300px;
   height: 176px;
@@ -272,4 +278,7 @@ legend{
 }
 .total>td{
   font-weight: bold;
+}
+.red{
+  color: #FF6347 !important;
 }
