@@ -5,6 +5,6 @@ Clone repository:
 
 `git clone https://github.com/DenisBro/Events_Administrator-React-Redux.git`
 
-Enter into cloned project and run:
+Enter into cloned project and run: `npm install`
 
-`npm start`
+After instalation the packges run: `npm start`
